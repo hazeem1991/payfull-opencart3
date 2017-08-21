@@ -3,6 +3,10 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 	private $error = array();
 
 	public function index() {
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+
 
         $this->load->language('extension/payment/hepsipay');
 
@@ -15,7 +19,7 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$this->response->redirect($this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL'));
+			$this->response->redirect($this->url->link('extension/extension', 'user_token=' . $this->session->data['user_token'], 'SSL'));
 		}
 
 		$data['heading_title'] = $this->language->get('heading_title');
@@ -64,22 +68,22 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
+			'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], 'SSL')
 		);
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_payment'),
-			'href' => $this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL')
+			'href' => $this->url->link('extension/extension', 'user_token=' . $this->session->data['user_token'], 'SSL')
 		);
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('extension/payment/hepsipay', 'token=' . $this->session->data['token'], 'SSL')
+			'href' => $this->url->link('extension/payment/hepsipay', 'user_token=' . $this->session->data['user_token'], 'SSL')
 		);
 
-		$data['action'] = $this->url->link('extension/payment/hepsipay', 'token=' . $this->session->data['token'], 'SSL');
+		$data['action'] = $this->url->link('extension/payment/hepsipay', 'user_token=' . $this->session->data['user_token'], 'SSL');
 
-		$data['cancel'] = $this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL');
+		$data['cancel'] = $this->url->link('extension/extension', 'user_token=' . $this->session->data['user_token'], 'SSL');
 
 		if (isset($this->request->post['hepsipay_endpoint'])) {
 			$data['hepsipay_endpoint'] = $this->request->post['hepsipay_endpoint'];
@@ -183,7 +187,7 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
 
-		$this->response->setOutput($this->load->view('extension/payment/hepsipay.tpl', $data));
+		$this->response->setOutput($this->load->view('extension/payment/hepsipay', $data));
 	}
 
 	public function install() {
