@@ -1,7 +1,7 @@
 <?php
 
 $this->db->query("
-	CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "hepsipay_order` (
+	CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "hepsipay_order` ( 
 	  `hepsipay_order_id` int(11) NOT NULL AUTO_INCREMENT,
 	  `order_id` int(11) NOT NULL,
 	  `transaction_id` varchar(100) NOT NULL,
