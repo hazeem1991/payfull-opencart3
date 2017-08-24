@@ -19,8 +19,7 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$this->response->redirect($this->url->link('extension/extension', 'user_token=' . $this->session->data['user_token'], 'SSL'));
-		}
+            $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));		}
 
 		$data['heading_title'] = $this->language->get('heading_title');
 
@@ -73,7 +72,7 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_payment'),
-			'href' => $this->url->link('extension/extension', 'user_token=' . $this->session->data['user_token'], 'SSL')
+			'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', 'SSL')
 		);
 
 		$data['breadcrumbs'][] = array(
@@ -83,7 +82,7 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 
 		$data['action'] = $this->url->link('extension/payment/hepsipay', 'user_token=' . $this->session->data['user_token'], 'SSL');
 
-		$data['cancel'] = $this->url->link('extension/extension', 'user_token=' . $this->session->data['user_token'], 'SSL');
+		$data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', 'SSL');
 
 		if (isset($this->request->post['hepsipay_endpoint'])) {
 			$data['hepsipay_endpoint'] = $this->request->post['hepsipay_endpoint'];
@@ -200,6 +199,6 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		return !$this->error;
+        return !$this->error;
 	}
 }
