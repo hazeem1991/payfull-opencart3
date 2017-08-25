@@ -256,6 +256,7 @@ class ModelExtensionPaymentHepsipay extends Model {
 
 		$method_data = array();
 
+
 		if ($status) {
 			$method_data = array(
 				'code'       => 'hepsipay',

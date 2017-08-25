@@ -2,7 +2,6 @@
 class ControllerExtensionPaymentHepsipay extends Controller {
 
 	public function index() {
-
 		$this->language->load('extension/payment/hepsipay');
 
 		$data['entry_hepsipay_installmet'] 	= $this->language->get('entry_hepsipay_installmet');
@@ -76,15 +75,10 @@ class ControllerExtensionPaymentHepsipay extends Controller {
         $data['hepsipay_logo']                  = $base_url.'image/hepsipay/hepsipay-logo.png';
 
 		$this->load->model('checkout/order');
-		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 		$total 		= $this->currency->format($order_info['total'], $order_info['currency_code'], false, true);
 		$data['total']         = $total;
-
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/hepsipay.tpl')) {
-			return $this->load->view($this->config->get('config_template') . '/template/extension/payment/hepsipay.tpl', $data);
-		} else {
-			return $this->load->view('extension/payment/hepsipay.tpl', $data);
-		}
+        return $this->load->view('extension/payment/hepsipay', $data);
 	}
 
 	public function get_card_info(){
@@ -357,7 +351,11 @@ class ControllerExtensionPaymentHepsipay extends Controller {
         if(isset($this->request->post['cc_cvc']) AND  !$this->checkCCCVC($this->request->post['cc_number'], $this->request->post['cc_cvc']) ){
             $error['cc_cvc'] = $this->language->get('entry_cc_cvc').' '. $this->language->get('entry_cc_cvc_wrong');
         }
-        if(isset($this->request->post['cc_month']) AND isset($this->request->post['cc_year']) AND !$this->checkCCEXPDate($this->request->post['cc_month'], $this->request->post['cc_year']) ){
+        if(
+            isset($this->request->post['cc_month']) AND
+            isset($this->request->post['cc_year']) AND
+            !$this->checkCCEXPDate($this->request->post['cc_month'], $this->request->post['cc_year'])
+        ){
             $error['cc_year'] = $this->language->get('entry_cc_date_wrong');
             $error['cc_month'] = $this->language->get('entry_cc_date_wrong');
         }
