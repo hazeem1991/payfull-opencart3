@@ -1,6 +1,6 @@
 <?php 
 
-$_['heading_title'] = 'Hepsipay Sipariş';
+$_['heading_title'] = 'Payfull Sipariş';
 
 $_['text_list'] = 'Liste';
 $_['text_complete'] = 'Tamamlandı';
@@ -28,5 +28,5 @@ $_['column_status'] = 'Durum';
 $_['column_date_added'] = 'İşlem Tarihi';
 $_['column_action'] = 'Action';
 
-$_['text_success'] = 'Başarılı: Hepsipay işlem geçmişini değiştirdiniz!';
-$_['error_permission'] = 'Uyarı: Hepsipay geçmişini düzenleme yetkiniz bulunmamaktadır!';
+$_['text_success'] = 'Başarılı: Payfull işlem geçmişini değiştirdiniz!';
+$_['error_permission'] = 'Uyarı: Payfull geçmişini düzenleme yetkiniz bulunmamaktadır!';

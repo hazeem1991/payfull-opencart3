@@ -28,14 +28,14 @@
                 <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
             </div>
             <div class="panel-body">
-                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-hepsipay"
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-payfull"
                       class="form-horizontal">
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label"
                                for="input-username">{{ entry_username }}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="hepsipay_username" value="{{ hepsipay_username }}"
+                            <input type="text" name="payfull_username" value="{{ payfull_username }}"
                                    placeholder="{{ entry_username }}" id="input-username"
                                    class="form-control"/>
                         </div>
@@ -45,7 +45,7 @@
                         <label class="col-sm-2 control-label"
                                for="input-password">{{ entry_password }}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="hepsipay_password" value="{{ hepsipay_password }}"
+                            <input type="text" name="payfull_password" value="{{ payfull_password }}"
                                    placeholder="{{ entry_password }}" id="input-password"
                                    class="form-control"/>
                         </div>
@@ -56,7 +56,7 @@
                             {{ entry_endpoint }}
                         </label>
                         <div class="col-sm-10">
-                            <input type="text" name="hepsipay_endpoint" value="{{ hepsipay_endpoint }}"
+                            <input type="text" name="payfull_endpoint" value="{{ payfull_endpoint }}"
                                    placeholder="{{ entry_endpoint }}" id="input-endpoint"
                                    class="form-control"
                                    disabled="disabled"/>
@@ -67,8 +67,8 @@
                         <label class="col-sm-2 control-label" for="input-test">{{ entry_3dsecure_status }}
                         </label>
                         <div class="col-sm-10">
-                            <select class="form-control" name="hepsipay_3dsecure_status">
-                                {% if hepsipay_3dsecure_status == 1 %}
+                            <select class="form-control" name="payfull_3dsecure_status">
+                                {% if payfull_3dsecure_status == 1 %}
                                     <option value="1" selected="selected">{{ text_enabled }}</option>
                                     <option value="0">{{ text_disabled }}</option>
                                 {% else %}
@@ -86,9 +86,9 @@
                             </span>
                         </label>
                         <div class="col-sm-10">
-                            <select class="form-control" name="hepsipay_force_3dsecure_status"
+                            <select class="form-control" name="payfull_force_3dsecure_status"
                                     id="force_3dsecure_status">
-                                {% if hepsipay_force_3dsecure_status == 1 %}
+                                {% if payfull_force_3dsecure_status == 1 %}
                                     <option value="1" selected="selected">{{ text_enabled }}</option>
                                     <option value="0">{{ text_disabled }}</option>
                                 {% else %}
@@ -104,9 +104,9 @@
                                for="input-test">{{ entry_force_3dsecure_debit }}
                         </label>
                         <div class="col-sm-10">
-                            <select disabled="disabled" class="form-control" name="hepsipay_force_3dsecure_debit"
+                            <select disabled="disabled" class="form-control" name="payfull_force_3dsecure_debit"
                                     id="force_3dsecure_debit">
-                                {% if hepsipay_force_3dsecure_debit == 1 %}
+                                {% if payfull_force_3dsecure_debit == 1 %}
                                     <option value="1" selected="selected">{{ text_enabled }}</option>
                                     <option value="0">{{ text_disabled }}</option>
                                 {% else %}
@@ -121,8 +121,8 @@
                         <label class="col-sm-2 control-label" for="input-test">{{ entry_installment_status }}
                         </label>
                         <div class="col-sm-10">
-                            <select class="form-control" name="hepsipay_installment_status">
-                                {% if hepsipay_installment_status == 1 %}
+                            <select class="form-control" name="payfull_installment_status">
+                                {% if payfull_installment_status == 1 %}
                                     <option value="1" selected="selected">{{ text_enabled }}</option>
                                     <option value="0">{{ text_disabled }}</option>
                                 {% else %}
@@ -138,8 +138,8 @@
                                for="input-test">{{ entry_installment_commission }}
                         </label>
                         <div class="col-sm-10">
-                            <select class="form-control" name="hepsipay_installment_commission">
-                                {% if hepsipay_installment_commission == 1 %}
+                            <select class="form-control" name="payfull_installment_commission">
+                                {% if payfull_installment_commission == 1 %}
                                     <option value="1" selected="selected">{{ text_enabled }}</option>
                                     <option value="0">{{ text_disabled }}</option>
                                 {% else %}
@@ -157,7 +157,7 @@
                             </span>
                         </label>
                         <div class="col-sm-10">
-                            <input type="text" name="hepsipay_total" value="{{ hepsipay_total }}"
+                            <input type="text" name="payfull_total" value="{{ payfull_total }}"
                                    placeholder="{{ entry_total }}" id="input-total" class="form-control"/>
                         </div>
                     </div>
@@ -166,9 +166,9 @@
                         <label class="col-sm-2 control-label"
                                for="input-order-status">{{ entry_order_status }}</label>
                         <div class="col-sm-10">
-                            <select name="hepsipay_order_status_id" id="input-order-status" class="form-control">
+                            <select name="payfull_order_status_id" id="input-order-status" class="form-control">
                                 {%  for order_status in order_statuses %}
-                                    {% if order_status.order_status_id == hepsipay_order_status_id %}
+                                    {% if order_status.order_status_id == payfull_order_status_id %}
                                     <option value="{{ order_status.order_status_id }}"
                                             selected="selected">{{ order_status.name }}</option>
                                     {% else %}
@@ -183,10 +183,10 @@
                         <label class="col-sm-2 control-label"
                                for="input-geo-zone">{{ entry_geo_zone }}</label>
                         <div class="col-sm-10">
-                            <select name="hepsipay_geo_zone_id" id="input-geo-zone" class="form-control">
+                            <select name="payfull_geo_zone_id" id="input-geo-zone" class="form-control">
                                 <option value="0">{{ text_all_zones }}</option>
                                 {% for geo_zone in geo_zones %}
-                                    {%  if geo_zone.geo_zone_id == hepsipay_geo_zone_id %}
+                                    {%  if geo_zone.geo_zone_id == payfull_geo_zone_id %}
                                         <option value="{{ geo_zone.geo_zone_id }}"
                                                 selected="selected">{{ geo_zone.name }}</option>
                                         {% else %}
@@ -200,8 +200,8 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
                         <div class="col-sm-10">
-                            <select name="payment_hepsipay_status" id="input-status" class="form-control">
-                                {% if payment_hepsipay_status == 1 %}
+                            <select name="payment_payfull_status" id="input-status" class="form-control">
+                                {% if payment_payfull_status == 1 %}
                                 <option value="1" selected="selected">{{ text_enabled }}</option>
                                 <option value="0">{{ text_disabled }}</option>
                                 {% else %}
@@ -216,7 +216,7 @@
                         <label class="col-sm-2 control-label"
                                for="input-sort-order">{{ entry_sort_order }}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="hepsipay_sort_order" value="{{ hepsipay_sort_order }}"
+                            <input type="text" name="payfull_sort_order" value="{{ payfull_sort_order }}"
                                    placeholder="{{ entry_sort_order }}" id="input-sort-order"
                                    class="form-control"/>
                         </div>

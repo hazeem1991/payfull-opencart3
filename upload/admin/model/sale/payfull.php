@@ -1,18 +1,18 @@
 <?php
 
-class ModelSaleHepsipay extends Model {
+class ModelSalePayfull extends Model {
 	
-	public function deleteHepsipay($hepsipay_order_id){
-		$this->db->query('delete from `'.DB_PREFIX.'hepsipay_order` WHERE hepsipay_order_id="'.$hepsipay_order_id.'"');
+	public function deletePayfull($payfull_order_id){
+		$this->db->query('delete from `'.DB_PREFIX.'payfull_order` WHERE payfull_order_id="'.$payfull_order_id.'"');
 	}
 
-	public function getTotalHepsipays($data = array()){
-		$sql = "SELECT count(po.hepsipay_order_id) as total from `".DB_PREFIX."hepsipay_order` po inner join `".DB_PREFIX."order` o on o.order_id = po.order_id";
+	public function getTotalPayfulls($data = array()){
+		$sql = "SELECT count(po.payfull_order_id) as total from `".DB_PREFIX."payfull_order` po inner join `".DB_PREFIX."order` o on o.order_id = po.order_id";
 
 		$implode = array();
 
-		if (isset($data['filter_hepsipay_order_id'])) {
-			$implode[] = 'po.hepsipay_order_id="' . $data['filter_hepsipay_order_id'].'"';
+		if (isset($data['filter_payfull_order_id'])) {
+			$implode[] = 'po.payfull_order_id="' . $data['filter_payfull_order_id'].'"';
 		}
 
 		if (isset($data['filter_order_id'])) {
@@ -58,13 +58,13 @@ class ModelSaleHepsipay extends Model {
 		}
 	}
 
-	public function getHepsipays($data = array()){
-		$sql = "SELECT po.*, o.total from `".DB_PREFIX."hepsipay_order` po inner join `".DB_PREFIX."order` o on o.order_id = po.order_id";
+	public function getPayfulls($data = array()){
+		$sql = "SELECT po.*, o.total from `".DB_PREFIX."payfull_order` po inner join `".DB_PREFIX."order` o on o.order_id = po.order_id";
 
 		$implode = array();
 
-		if (isset($data['filter_hepsipay_order_id'])) {
-			$implode[] = 'po.hepsipay_order_id="' . $data['filter_hepsipay_order_id'].'"';
+		if (isset($data['filter_payfull_order_id'])) {
+			$implode[] = 'po.payfull_order_id="' . $data['filter_payfull_order_id'].'"';
 		}
 
 		if (isset($data['filter_order_id'])) {

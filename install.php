@@ -1,8 +1,8 @@
 <?php
 
 $this->db->query("
-	CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "hepsipay_order` (
-	  `hepsipay_order_id` int(11) NOT NULL AUTO_INCREMENT,
+	CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "payfull_order` (
+	  `payfull_order_id` int(11) NOT NULL AUTO_INCREMENT,
 	  `order_id` int(11) NOT NULL,
 	  `transaction_id` varchar(100) NOT NULL,
 	  `bank_id` varchar(100) NOT NULL,
@@ -18,11 +18,11 @@ $this->db->query("
 	  `try_total` DECIMAL( 10, 2 ) NOT NULL,
 	  `original` text NOT NULL,
 	  `date_added` DATETIME NOT NULL,
-	  PRIMARY KEY (`hepsipay_order_id`)
+	  PRIMARY KEY (`payfull_order_id`)
 	) ENGINE=MyISAM DEFAULT COLLATE=utf8_general_ci;");
 
-$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "hepsipay_3d_form` (
-  `hepsipay_3d_form_id` int(11) NOT NULL AUTO_INCREMENT,
+$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "payfull_3d_form` (
+  `payfull_3d_form_id` int(11) NOT NULL AUTO_INCREMENT,
   `html` text NOT NULL,
-  PRIMARY KEY (`hepsipay_3d_form_id`)
+  PRIMARY KEY (`payfull_3d_form_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1");

@@ -1,8 +1,8 @@
 <?php
 
 // Text
-$_['text_hepsipay']      = 'Kredi Kartı İle Öde (HEPSIPAY)';
-$_['text_title']        = 'Hepsipay Payment Gateway';
+$_['text_payfull']      = 'Kredi Kartı İle Öde (PAYFULL)';
+$_['text_title']        = 'Payfull Payment Gateway';
 $_['text_3d']           = '3D Secure Kullanın';
 $_['text_installments'] = 'Taksit';
 $_['text_extra_installments'] = 'Artı Taksit';
@@ -36,9 +36,9 @@ $_['entry_cc_date_wrong']       = 'Kartınızın Son Kullanma Tarihini Hatalı G
 $_['entry_3d_not_available']    = '3D Secure Aktif Değildir';
 $_['entry_bkm_not_available']   = 'BKM Express Aktif Değildir';
 
-$_['entry_hepsipay_installmet']  = 'Taksit';
-$_['entry_hepsipay_amount']      = 'Tutar / Ay';
-$_['entry_hepsipay_total']       = 'Toplam Tutar';
+$_['entry_payfull_installmet']  = 'Taksit';
+$_['entry_payfull_amount']      = 'Tutar / Ay';
+$_['entry_payfull_total']       = 'Toplam Tutar';
 
 $_['commission_sub_total_title'] = 'Komisyonu';
 

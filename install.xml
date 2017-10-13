@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modification>
-    <name>Hepsipay</name>
+    <name>Payfull</name>
     <version>1.0</version>
-    <author>Hepsipay</author>
-    <code>Hepsipay</code>
-    <link>http://www.hepsipay.com</link>
+    <author>Payfull</author>
+    <code>Payfull</code>
+    <link>http://www.payfull.com</link>
     <file path="admin/language/en-gb/common/column_left.php">
         <operation>
             <search><![CDATA[$_['text_order']]]></search>
             <add position="before"><![CDATA[
-                $_['text_hepsipay_history'] =    'Hepsipay history';
+                $_['text_payfull_history'] =    'Payfull history';
             ]]></add>
         </operation>
     </file>
@@ -17,7 +17,7 @@
         <operation>
             <search><![CDATA[$_['text_order']]]></search>
             <add position="before"><![CDATA[
-                $_['text_hepsipay_history'] =    'Hepsipay history';
+                $_['text_payfull_history'] =    'Payfull history';
             ]]></add>
         </operation>
     </file>
@@ -25,10 +25,10 @@
         <operation>
             <search><![CDATA[if ($this->user->hasPermission('access', 'sale/order')) {]]></search>
             <add position="before"><![CDATA[
-                 if ($this->user->hasPermission('access', 'sale/hepsipay')) {
+                 if ($this->user->hasPermission('access', 'sale/payfull')) {
                     $sale[] = array(
-                        'name'	   => $this->language->get('text_hepsipay_history'),
-                        'href'     => $this->url->link('sale/hepsipay', 'token=' . $this->session->data['token'], true),
+                        'name'	   => $this->language->get('text_payfull_history'),
+                        'href'     => $this->url->link('sale/payfull', 'token=' . $this->session->data['token'], true),
                         'children' => array()
                     );
                 }

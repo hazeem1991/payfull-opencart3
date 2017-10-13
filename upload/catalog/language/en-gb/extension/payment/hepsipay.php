@@ -1,8 +1,8 @@
 <?php
 
 // Text
-$_['text_hepsipay']      = 'Hepsipay Payment Gateway';
-$_['text_title']        = 'Hepsipay Payment Gateway';
+$_['text_payfull']      = 'Payfull Payment Gateway';
+$_['text_title']        = 'Payfull Payment Gateway';
 $_['text_3d']           = 'Use 3D secure Payments System';
 $_['text_installments'] = 'Installments';
 $_['text_extra_installments'] = 'Extra Installments';
@@ -36,8 +36,8 @@ $_['entry_cc_date_wrong']       = 'Incorrect credit card expiration date.';
 $_['entry_3d_not_available']    = '3D Secure Is Not Available';
 $_['entry_bkm_not_available']   = 'BKM Express Is Not Available';
 
-$_['entry_hepsipay_installmet']  = 'Installment';
-$_['entry_hepsipay_amount']      = 'Amount / Month';
-$_['entry_hepsipay_total']       = 'Total';
+$_['entry_payfull_installmet']  = 'Installment';
+$_['entry_payfull_amount']      = 'Amount / Month';
+$_['entry_payfull_total']       = 'Total';
 
 $_['commission_sub_total_title'] = 'Commission';

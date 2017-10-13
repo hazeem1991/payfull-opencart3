@@ -1,6 +1,6 @@
 <?php
 
-class ModelExtensionPaymentHepsipay extends Model {
+class ModelExtensionPaymentPayfull extends Model {
 
 	public function getInstallments(){
 		$params = array(
@@ -26,7 +26,7 @@ class ModelExtensionPaymentHepsipay extends Model {
 	}
 
 	public function getOneShotTotal($total){
-        if($this->config->get('hepsipay_installment_commission')){
+        if($this->config->get('payfull_installment_commission')){
             $oneShotCommission 	= json_decode($this->getOneShotCommission(), true);
         }else{
             $oneShotCommission 	= 0;
@@ -39,7 +39,7 @@ class ModelExtensionPaymentHepsipay extends Model {
 	}
 
 	public function getExtraInstallments(){
-        //todo: hepsipay - extra inst
+        //todo: payfull - extra inst
 		$extraInstallmentsStatus = false;
         return json_encode([]);
 
@@ -62,7 +62,7 @@ class ModelExtensionPaymentHepsipay extends Model {
 	public function saveResponse($data){
 	    if(!isset($data['transaction_id'])) return;
 
-		$sql = "insert into `".DB_PREFIX."hepsipay_order` SET 
+		$sql = "insert into `".DB_PREFIX."payfull_order` SET 
 		  `order_id` = '".$data['passive_data']."',
 		  `transaction_id` = '".$data['transaction_id']."',
 		  `bank_id` = '".$data['bank_id']."',
@@ -98,10 +98,10 @@ class ModelExtensionPaymentHepsipay extends Model {
 		}
 
 
-        $force3D = $this->config->get('hepsipay_force_3dsecure_status');
+        $force3D = $this->config->get('payfull_force_3dsecure_status');
         $use3d  = ($force3D)?1:$use3d;
 
-        if($this->config->get('hepsipay_force_3dsecure_debit')){
+        if($this->config->get('payfull_force_3dsecure_debit')){
             $cardInfo = $this->get_card_info();
             $cardInfo = json_decode($cardInfo, true);
 
@@ -120,7 +120,7 @@ class ModelExtensionPaymentHepsipay extends Model {
 				"language"        => 'tr',
 				"client_ip"       => $_SERVER['REMOTE_ADDR'],
 				"payment_title"   => 'Order #'.$order_info['order_id'],
-				"return_url"      => $this->url->link('extension/payment/hepsipay/callback','',true),
+				"return_url"      => $this->url->link('extension/payment/payfull/callback','',true),
 				"bank_id"         => 'BKMExpress',
 
 				"customer_firstname" => $order_info['firstname'],
@@ -147,7 +147,7 @@ class ModelExtensionPaymentHepsipay extends Model {
 				"client_ip"       => $_SERVER['REMOTE_ADDR'],
 				"payment_title"   => 'Order #'.$order_info['order_id'],
 				"use3d"           => $use3d,
-				"return_url"      => $this->url->link('extension/payment/hepsipay/callback','',true),
+				"return_url"      => $this->url->link('extension/payment/payfull/callback','',true),
 
 				"customer_firstname" => $order_info['firstname'],
 				"customer_lastname"  => $order_info['lastname'],
@@ -164,7 +164,7 @@ class ModelExtensionPaymentHepsipay extends Model {
 		}elseif(!$bkmExist){
 			$params["installments"] = 1;			
 		}else{
-			$params["installments"] = ($this->config->get('hepsipay_installment_status'))?1:0;
+			$params["installments"] = ($this->config->get('payfull_installment_status'))?1:0;
 		}
 		    
 		if(isset($this->session->data['bank_id']) AND $params["installments"] > 1){
@@ -179,7 +179,7 @@ class ModelExtensionPaymentHepsipay extends Model {
 			$params["campaign_id"] = $this->request->post['campaign_id'];//campaign_id for extra installments
 		}
 
-        if($this->config->get('hepsipay_installment_commission')){
+        if($this->config->get('payfull_installment_commission')){
 		    if(isset($this->session->data['installments'])){
                 $installmentsArr = $this->session->data['installments'];
             }else{
@@ -203,13 +203,11 @@ class ModelExtensionPaymentHepsipay extends Model {
 
 	public function call($params){
 
-		$merchantPassword = $this->config->get('hepsipay_password');
+		$merchantPassword = $this->config->get('payfull_password');
 
-		$params["merchant"] = $this->config->get('hepsipay_username');//[mandatory]
+		$params["merchant"] = $this->config->get('payfull_username');
 
-		$api_url = $this->config->get('hepsipay_endpoint');
-        $api_url = 'https://pluginmanager.hepsipay.com/portal/web/api/v1';
-
+		$api_url = $this->config->get('payfull_endpoint');
 
 		//begin HASH calculation
 		ksort($params);
@@ -240,13 +238,13 @@ class ModelExtensionPaymentHepsipay extends Model {
 	}
 
 	public function getMethod($address, $total) {
-		$this->load->language('extension/payment/hepsipay');
+		$this->load->language('extension/payment/payfull');
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('cod_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
-		if ($this->config->get('hepsipay_total') > 0 && $this->config->get('hepsipay_total') > $total) {
+		if ($this->config->get('payfull_total') > 0 && $this->config->get('payfull_total') > $total) {
 			$status = false;
-		} elseif (!$this->config->get('hepsipay_geo_zone_id')) {
+		} elseif (!$this->config->get('payfull_geo_zone_id')) {
 			$status = true;
 		} elseif ($query->num_rows) {
 			$status = true;
@@ -259,10 +257,10 @@ class ModelExtensionPaymentHepsipay extends Model {
 
 		if ($status) {
 			$method_data = array(
-				'code'       => 'hepsipay',
-				'title'      => $this->language->get('text_hepsipay'),
+				'code'       => 'payfull',
+				'title'      => $this->language->get('text_payfull'),
 				'terms'      => '',
-				'sort_order' => $this->config->get('hepsipay_sort_order')
+				'sort_order' => $this->config->get('payfull_sort_order')
 			);
 		}
 

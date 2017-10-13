@@ -1,8 +1,8 @@
 <form class="form-horizontal">
     <fieldset id="payment">
 
-        <!-- todo: hepsipay - bkm tab -->
-        <legend> {{ text_credit_card }} <img src=" {{ hepsipay_logo }}"></legend>
+        <!-- todo: payfull - bkm tab -->
+        <legend> {{ text_credit_card }} <img src=" {{ payfull_logo }}"></legend>
 
         <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-cc-type"> {{ entry_cc_name }}</label>
@@ -51,11 +51,11 @@
                 <div id="installment_table_id">
                     <div class="installmet_head">
                         <div class="install_head_label add_space"><img style="display: none" class="bank_photo"
-                                                                       data-src=" {{ hepsipay_banks_images }}" src="">
+                                                                       data-src=" {{ payfull_banks_images }}" src="">
                         </div>
-                        <div class="install_head_label"> {{ entry_hepsipay_installmet }}</div>
-                        <div class="install_head_label"> {{ entry_hepsipay_amount }}</div>
-                        <div class="install_head_label"> {{ entry_hepsipay_total }}</div>
+                        <div class="install_head_label"> {{ entry_payfull_installmet }}</div>
+                        <div class="install_head_label"> {{ entry_payfull_amount }}</div>
+                        <div class="install_head_label"> {{ entry_payfull_total }}</div>
                     </div>
                     <div class="installment_body" id="installment_body">
                         <div class="installment_row">
@@ -82,7 +82,7 @@
         </div>
 
 
-        {% if hepsipay_force_3dsecure_status %}
+        {% if payfull_force_3dsecure_status %}
             <div class="form-group use-3d-wrapper">
                 <div class="col-sm-10 col-sm-offset-2">
                     <div class="checkbox">
@@ -91,7 +91,7 @@
                     </div>
                 </div>
             </div>
-        {% elseif hepsipay_3dsecure_status %}
+        {% elseif payfull_3dsecure_status %}
             <div class="form-group use-3d-wrapper">
                 <div class="col-sm-10 col-sm-offset-2">
                     <div class="checkbox">
@@ -103,7 +103,7 @@
         {% endif %}
 
 
-        <!-- todo: hepsipay - bkm -->
+        <!-- todo: payfull - bkm -->
 
     </fieldset>
 </form>
@@ -148,7 +148,7 @@
 
     confirmButton.bind('click', function () {
         $.ajax({
-            url: 'index.php?route=extension/payment/hepsipay/send',
+            url: 'index.php?route=extension/payment/payfull/send',
             type: 'post',
             data: $('#payment select, #payment input[type="text"], #payment input[type="hidden"], #payment input[type="checkbox"]:checked, #payment input[type="radio"]:checked'),
             dataType: 'json',
@@ -236,7 +236,7 @@
 
     function refreshInstallmentOptions() {
         $.ajax({
-            url: 'index.php?route=extension/payment/hepsipay/get_card_info',
+            url: 'index.php?route=extension/payment/payfull/get_card_info',
             type: 'post',
             data: $('#payment :input'),
             dataType: 'json',
@@ -297,7 +297,7 @@
                 }
 
 
-                {% if hepsipay_force_3dsecure_debit %}
+                {% if payfull_force_3dsecure_debit %}
                     if (
                         json['card_type'] != 'CREDIT' &&
                         $('#use3d').attr('data-forced') == 'false'

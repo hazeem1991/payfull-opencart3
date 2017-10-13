@@ -110,10 +110,10 @@
                 <tr>
                   <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
 
-                  <!--<td class="text-right"><?php if ($sort == 'po.hepsipay_order_id') { ?>
-                    <a href="<?php echo $sort_hepsipay_order_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_hepsipay_order_id; ?></a>
+                  <!--<td class="text-right"><?php if ($sort == 'po.payfull_order_id') { ?>
+                    <a href="<?php echo $sort_payfull_order_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_payfull_order_id; ?></a>
                     <?php } else { ?>
-                    <a href="<?php echo $sort_hepsipay_order_id; ?>"><?php echo $column_hepsipay_order_id; ?></a>
+                    <a href="<?php echo $sort_payfull_order_id; ?>"><?php echo $column_payfull_order_id; ?></a>
                     <?php } ?></td>-->
 
                     <td class="text-right"><?php if ($sort == 'po.order_id') { ?>
@@ -186,10 +186,10 @@
                 <?php if ($transactions) { ?>
                 <?php foreach ($transactions as $transaction) { ?>
                 <tr>
-                  <td class="text-center"><?php if (in_array($transaction['hepsipay_order_id'], $selected)) { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $transaction['hepsipay_order_id']; ?>" checked="checked" />
+                  <td class="text-center"><?php if (in_array($transaction['payfull_order_id'], $selected)) { ?>
+                    <input type="checkbox" name="selected[]" value="<?php echo $transaction['payfull_order_id']; ?>" checked="checked" />
                     <?php } else { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $transaction['hepsipay_order_id']; ?>" />
+                    <input type="checkbox" name="selected[]" value="<?php echo $transaction['payfull_order_id']; ?>" />
                     <?php } ?></td>
 
                   <td class="text-right"><?php echo $transaction['order_id']; ?></td>
@@ -223,7 +223,7 @@
   </div>
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
-	url = 'index.php?route=sale/hepsipay&token=<?php echo $token; ?>';
+	url = 'index.php?route=sale/payfull&token=<?php echo $token; ?>';
 	
 	var filter_order_id = $('input[name=\'filter_order_id\']').val();
 	

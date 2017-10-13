@@ -1,6 +1,6 @@
 <?php 
 
-$_['heading_title'] = 'Hepsipay History';
+$_['heading_title'] = 'Payfull History';
 
 $_['text_list'] = 'List';
 $_['text_complete'] = 'Complete';

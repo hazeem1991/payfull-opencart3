@@ -1,12 +1,12 @@
 <?php
-class ControllerExtensionPaymentHepsipay extends Controller {
+class ControllerExtensionPaymentPayfull extends Controller {
 
 	public function index() {
-		$this->language->load('extension/payment/hepsipay');
+		$this->language->load('extension/payment/payfull');
 
-		$data['entry_hepsipay_installmet'] 	= $this->language->get('entry_hepsipay_installmet');
-		$data['entry_hepsipay_amount'] 		= $this->language->get('entry_hepsipay_amount');
-		$data['entry_hepsipay_total'] 		= $this->language->get('entry_hepsipay_total');
+		$data['entry_payfull_installmet'] 	= $this->language->get('entry_payfull_installmet');
+		$data['entry_payfull_amount'] 		= $this->language->get('entry_payfull_amount');
+		$data['entry_payfull_total'] 		= $this->language->get('entry_payfull_total');
 
 		$data['button_confirm'] = $this->language->get('button_confirm');
 
@@ -60,53 +60,53 @@ class ControllerExtensionPaymentHepsipay extends Controller {
             $base_url = $this->config->get('config_url');
         }
 
-        //todo: hepsipay - get bkm status
-		$data['hepsipay_bkm_status']      = 0;
+        //todo: payfull - get bkm status
+		$data['payfull_bkm_status']      = 0;
 
-        $data['visa_img_path']                  = $base_url.'image/hepsipay/hepsipay_creditcard_visa.png';
-        $data['master_img_path']                = $base_url.'image/hepsipay/hepsipay_creditcard_master.png';
-        $data['maestro_img_path']               = $base_url.'image/hepsipay/hepsipay_creditcard_maestro.png';
-        $data['troy_img_path']                  = $base_url.'image/hepsipay/hepsipay_creditcard_troy.png';
-        $data['not_supported_img_path']         = $base_url.'image/hepsipay/hepsipay_creditcard_not_supported.png';
-        $data['hepsipay_3dsecure_status']       = $this->config->get('hepsipay_3dsecure_status');
-        $data['hepsipay_force_3dsecure_status'] = $this->config->get('hepsipay_force_3dsecure_status');
-        $data['hepsipay_force_3dsecure_debit']  = 1;
-        $data['hepsipay_banks_images']          = $base_url.'image/hepsipay/';
-        $data['hepsipay_logo']                  = $base_url.'image/hepsipay/hepsipay-logo.png';
+        $data['visa_img_path']                  = $base_url.'image/payfull/payfull_creditcard_visa.png';
+        $data['master_img_path']                = $base_url.'image/payfull/payfull_creditcard_master.png';
+        $data['maestro_img_path']               = $base_url.'image/payfull/payfull_creditcard_maestro.png';
+        $data['troy_img_path']                  = $base_url.'image/payfull/payfull_creditcard_troy.png';
+        $data['not_supported_img_path']         = $base_url.'image/payfull/payfull_creditcard_not_supported.png';
+        $data['payfull_3dsecure_status']       = $this->config->get('payfull_3dsecure_status');
+        $data['payfull_force_3dsecure_status'] = $this->config->get('payfull_force_3dsecure_status');
+        $data['payfull_force_3dsecure_debit']  = 1;
+        $data['payfull_banks_images']          = $base_url.'image/payfull/';
+        $data['payfull_logo']                  = $base_url.'image/payfull/payfull-logo.png';
 
 		$this->load->model('checkout/order');
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 		$total 		= $this->currency->format($order_info['total'], $order_info['currency_code'], false, true);
 		$data['total']         = $total;
-        return $this->load->view('extension/payment/hepsipay', $data);
+        return $this->load->view('extension/payment/payfull', $data);
 	}
 
 	public function get_card_info(){
 		$this->load->model('checkout/order');
-		$this->load->model('extension/payment/hepsipay');
+		$this->load->model('extension/payment/payfull');
 		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $order_info['total'] = $this->model_extension_payment_hepsipay->getOneShotTotal($order_info['total']);
-        $hepsipay_3dsecure_status 	= $this->config->get('hepsipay_3dsecure_status');
-        $hepsipay_installment_status = $this->config->get('hepsipay_installment_status');
+        $order_info['total'] = $this->model_extension_payment_payfull->getOneShotTotal($order_info['total']);
+        $payfull_3dsecure_status 	= $this->config->get('payfull_3dsecure_status');
+        $payfull_installment_status = $this->config->get('payfull_installment_status');
 
 		//default data
 		$defaultTotal 				=	$this->currency->format($order_info['total'], $order_info['currency_code'], false, true);
 		$json 						= array();
-		$json['has3d'] 				= $hepsipay_3dsecure_status;
+		$json['has3d'] 				= $payfull_3dsecure_status;
 		$json['installments'] 		= [['count' => 1, 'installment_total'=>$defaultTotal, 'total'=>$defaultTotal]];
 		$json['bank_id'] 	    	= '';
 		$json['card_type'] 	    	= '';
 
 		//no cc number
-		if(empty($this->request->post['cc_number']) OR !$hepsipay_installment_status){
+		if(empty($this->request->post['cc_number']) OR !$payfull_installment_status){
 			header('Content-type: text/json');
 			echo json_encode($json);
 			exit;
 		}
 
 		//get info from API about bank + card + instalments
-		$card_info  		 = json_decode($this->model_extension_payment_hepsipay->get_card_info(), true);
-		$installments_info 	 = json_decode($this->model_extension_payment_hepsipay->getInstallments(), true);
+		$card_info  		 = json_decode($this->model_extension_payment_payfull->get_card_info(), true);
+		$installments_info 	 = json_decode($this->model_extension_payment_payfull->getInstallments(), true);
 		$bank_info 			 = array();
 
 		//no bank is detected
@@ -136,10 +136,10 @@ class ControllerExtensionPaymentHepsipay extends Controller {
         }
 
 		$oneShotTotal 				= $this->currency->format($order_info['total'], $order_info['currency_code'], false, true);
-		$json['has3d'] 				= ($hepsipay_3dsecure_status)?1:0;
+		$json['has3d'] 				= ($payfull_3dsecure_status)?1:0;
 
 		//installments is not allowed for some reason
-		if(!$hepsipay_installment_status){
+		if(!$payfull_installment_status){
 			$json['installments'] = [['count' => 1, 'installment_total'=>$oneShotTotal, 'total'=>$oneShotTotal]];
 			header('Content-type: text/json');
 			echo json_encode($json);
@@ -152,11 +152,11 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 		$json['bank_id'] 				= $bank_info['bank'];
 
 		//get info from API about extra instalments
-        //todo: hepsipay - extra installments
+        //todo: payfull - extra installments
 		$extraInstallmentsAndInstallmentsArr = [];
 
 		foreach($bank_info['installments'] as $justNormalKey=>$installment){
-            if($this->config->get('hepsipay_installment_commission')){
+            if($this->config->get('payfull_installment_commission')){
                 $commission = $installment['commission'];
                 $commission = str_replace('%', '', $commission);
             }else{
@@ -172,7 +172,7 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 			$installment_total = $this->currency->format($installment_total, $order_info['currency_code'], false, true);
 			$bank_info['installments'][$justNormalKey]['installment_total'] = $installment_total;
 
-            //todo: hepsipay - extra inst
+            //todo: payfull - extra inst
 			if(false){}
 
 		}
@@ -192,7 +192,7 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 	}
 
 	public function get_extra_installments(){
-        //todo: hepsipay - get extra installments
+        //todo: payfull - get extra installments
         $json 		        = array();
         $json['extra_inst'] = [];
         header('Content-type: text/json');
@@ -201,7 +201,7 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 	}
 
 	public function send(){
-		$this->load->model('extension/payment/hepsipay');
+		$this->load->model('extension/payment/payfull');
 
 		$json = array();
 
@@ -212,13 +212,13 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 			exit;
 		}
 
-		$response                           = $this->model_extension_payment_hepsipay->send();
+		$response                           = $this->model_extension_payment_payfull->send();
 		$responseData                       = json_decode($response, true);
         $responseData['extra_installments'] = isset($responseData['extra_installments'])?$responseData['extra_installments']:0;
         $responseData['campaign_id']        = isset($responseData['campaign_id'])?$responseData['campaign_id']:0;
 
         if(!isset($responseData['status'])){
-            $json['error']['general_error'] = 'Hepsipay gateway connection problem';
+            $json['error']['general_error'] = 'Payfull gateway connection problem';
             echo json_encode($json);
             exit;
         }
@@ -232,35 +232,35 @@ class ControllerExtensionPaymentHepsipay extends Controller {
         //3d html response
         if (!isset($responseData['html']) OR $responseData['html'] == '') {
             //success
-            $this->model_extension_payment_hepsipay->saveResponse($responseData);
+            $this->model_extension_payment_payfull->saveResponse($responseData);
             $this->addSubTotalForInstCommission($responseData);
-            $this->model_checkout_order->addOrderHistory($responseData['passive_data'], $this->config->get('hepsipay_order_status_id'));
+            $this->model_checkout_order->addOrderHistory($responseData['passive_data'], $this->config->get('payfull_order_status_id'));
             $json['success'] = $this->url->link('checkout/success');
 		}else{
             //success need to print html 3d response
-			$this->db->query('insert into `'.DB_PREFIX.'hepsipay_3d_form` SET html="'.htmlspecialchars($responseData['html']).'"');
-			$this->session->data['hepsipay_3d_form_id'] = $this->db->getLastId();
-			$json['success'] = $this->url->link('extension/payment/hepsipay/secure');
+			$this->db->query('insert into `'.DB_PREFIX.'payfull_3d_form` SET html="'.htmlspecialchars($responseData['html']).'"');
+			$this->session->data['payfull_3d_form_id'] = $this->db->getLastId();
+			$json['success'] = $this->url->link('extension/payment/payfull/secure');
 		}
 		echo json_encode($json);
 	}
 
     public function addSubTotalForInstCommission($responseData){
         //no need if the installments commission is inactive
-        if(!$this->config->get('hepsipay_installment_commission') OR (isset($responseData['installments']) AND $responseData['installments'] < 2)){
+        if(!$this->config->get('payfull_installment_commission') OR (isset($responseData['installments']) AND $responseData['installments'] < 2)){
             return;
         }
 
         $this->load->model('checkout/order');
-        $this->language->load('extension/payment/hepsipay');
+        $this->language->load('extension/payment/payfull');
         $installmentsCommissionFound        = false;
         $order_info                         = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $hepsipay_commission_sub_total_title = $this->language->get('commission_sub_total_title');
+        $payfull_commission_sub_total_title = $this->language->get('commission_sub_total_title');
         $sort_order                         = 0;
         $installments_number                = 1;
         $installments_commission            = 0;
 
-        $installments_info 	= $this->model_extension_payment_hepsipay->getInstallments();
+        $installments_info 	= $this->model_extension_payment_payfull->getInstallments();
         $installments_info  = json_decode($installments_info, true);
 
         if(!isset($installments_info['data'])) $installments_info['data'] = [];
@@ -279,7 +279,7 @@ class ControllerExtensionPaymentHepsipay extends Controller {
         }
 
 		//get extra installments
-		$sql 		 = "SELECT * from `".DB_PREFIX."hepsipay_order` where order_id = '" . (int)$order_info['order_id'] . "'";
+		$sql 		 = "SELECT * from `".DB_PREFIX."payfull_order` where order_id = '" . (int)$order_info['order_id'] . "'";
 		$transaction = $this->db->query($sql)->row;
 		if(isset($transaction['extra_installments']) AND $transaction['extra_installments'] != '' AND $transaction['extra_installments'] > 0){
 			$installments_number .= ' +'.$transaction['extra_installments'];
@@ -292,7 +292,7 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 		}
 
         $subTotalValue = $order_info['total'] * ($installments_commission/100);
-        $subTotalText  = $hepsipay_commission_sub_total_title.$installments_number.' '.$installments_commission.'% '.$this->currency->format($subTotalValue, $order_info['currency_code'], true, true);;
+        $subTotalText  = $payfull_commission_sub_total_title.$installments_number.' '.$installments_commission.'% '.$this->currency->format($subTotalValue, $order_info['currency_code'], true, true);;
         $newOrderTotal = $subTotalValue + $order_info['total'];
 
         if($installmentsCommissionFound){
@@ -303,7 +303,7 @@ class ControllerExtensionPaymentHepsipay extends Controller {
     }
 
 	public function validatePaymentData(){
-		$this->language->load('extension/payment/hepsipay');
+		$this->language->load('extension/payment/payfull');
 		$error = [];
 
 		if(!isset($this->request->post['cc_name']) OR $this->request->post['cc_name'] == ''){
@@ -360,17 +360,17 @@ class ControllerExtensionPaymentHepsipay extends Controller {
             $error['cc_month'] = $this->language->get('entry_cc_date_wrong');
         }
 
-        if(isset($this->request->post['use3d']) AND $this->request->post['use3d'] AND !$this->config->get('hepsipay_3dsecure_status')){
-            if(!$this->config->get('hepsipay_force_3dsecure_debit')){
+        if(isset($this->request->post['use3d']) AND $this->request->post['use3d'] AND !$this->config->get('payfull_3dsecure_status')){
+            if(!$this->config->get('payfull_force_3dsecure_debit')){
                 $error['general_error'] = $this->language->get('entry_3d_not_available');
             }
         }
 
-		if(isset($this->request->post['useBKM']) AND $this->request->post['useBKM'] AND !$this->config->get('hepsipay_bkm_status')){
+		if(isset($this->request->post['useBKM']) AND $this->request->post['useBKM'] AND !$this->config->get('payfull_bkm_status')){
 			$error['general_error'] = $this->language->get('entry_bkm_not_available');
 		}
 
-		if(isset($this->request->post['useBKM']) AND $this->request->post['useBKM'] AND $this->config->get('hepsipay_bkm_status')){
+		if(isset($this->request->post['useBKM']) AND $this->request->post['useBKM'] AND $this->config->get('payfull_bkm_status')){
 			unset($error['cc_name']);
 			unset($error['cc_number']);
 			unset($error['cc_cvc']);
@@ -432,10 +432,10 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 
     public function secure(){
         try{
-            $html = $this->db->query('select html from `'.DB_PREFIX.'hepsipay_3d_form` WHERE hepsipay_3d_form_id = "'.$this->session->data['hepsipay_3d_form_id'].'"');
+            $html = $this->db->query('select html from `'.DB_PREFIX.'payfull_3d_form` WHERE payfull_3d_form_id = "'.$this->session->data['payfull_3d_form_id'].'"');
             $html = isset($html->row['html'])?$html->row['html']:'Bad Request';
             //delete form
-            $this->db->query('delete from `'.DB_PREFIX.'hepsipay_3d_form` WHERE hepsipay_3d_form_id = "'.$this->session->data['hepsipay_3d_form_id'].'"');
+            $this->db->query('delete from `'.DB_PREFIX.'payfull_3d_form` WHERE payfull_3d_form_id = "'.$this->session->data['payfull_3d_form_id'].'"');
             echo htmlspecialchars_decode($html);
         } catch (Exception $e){
             echo 'Bad Request';
@@ -443,12 +443,12 @@ class ControllerExtensionPaymentHepsipay extends Controller {
     }
 
 	public function callback() {
-		$this->load->model('extension/payment/hepsipay');
+		$this->load->model('extension/payment/payfull');
 
         $post = $this->request->post;
 
 		//hash
-		$merchantPassword = $this->config->get('hepsipay_password');
+		$merchantPassword = $this->config->get('payfull_password');
 		$hash             = self::generateHash($post, $merchantPassword);
 
 		//extra installments
@@ -456,7 +456,7 @@ class ControllerExtensionPaymentHepsipay extends Controller {
         $post['campaign_id']        = isset($post['campaign_id'])?$post['campaign_id']:0;
 
 		//save response 
-		$this->model_extension_payment_hepsipay->saveResponse($post);
+		$this->model_extension_payment_payfull->saveResponse($post);
 
 		if (isset($post['passive_data'])) {
 			$order_id = $post['passive_data'];
@@ -469,7 +469,7 @@ class ControllerExtensionPaymentHepsipay extends Controller {
 		$order_info = $this->model_checkout_order->getOrder($order_id);
 		if ($order_info && $post['ErrorCode'] == '00' && ($hash == $post["hash"])) {
 			$responseData =  $post;
-			$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('hepsipay_order_status_id'));
+			$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('payfull_order_status_id'));
 			$this->addSubTotalForInstCommission($responseData);
 			$this->response->redirect($this->url->link('checkout/success'));
 		}else{
