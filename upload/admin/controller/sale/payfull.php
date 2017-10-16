@@ -4,19 +4,14 @@ class ControllerSalePayfull extends Controller {
 
 	public function index() {
 		$this->load->language('sale/payfull');
-
 		$this->document->setTitle($this->language->get('heading_title'));
-
 		$this->load->model('sale/payfull');
-
 		$this->getList();
 	}
 
 	public function delete() {
 		$this->load->language('sale/payfull');
-
 		$this->document->setTitle($this->language->get('heading_title'));
-
 		$this->load->model('sale/payfull');
 
 		if (isset($this->request->post['selected']) && $this->validateDelete()) {
@@ -455,15 +450,15 @@ class ControllerSalePayfull extends Controller {
 
 		$data['results'] = sprintf($this->language->get('text_pagination'), ($payfull_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($payfull_total - $this->config->get('config_limit_admin'))) ? $payfull_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $payfull_total, ceil($payfull_total / $this->config->get('config_limit_admin')));
 
-		$data['filter_payfull_order_id'] = $filter_payfull_order_id;
-		$data['filter_order_id'] = $filter_order_id;
-		$data['filter_transaction_id']         = $filter_transaction_id;
-		$data['filter_bank_id']         = $filter_bank_id;
-		$data['filter_status']         = $filter_status;
-		$data['filter_use3d']          = $filter_use3d;
-		$data['filter_client_ip']            = $filter_client_ip;
-		$data['filter_installments'] = $filter_installments;
-		$data['filter_date_added']       = $filter_date_added;
+		$data['filter_payfull_order_id']    = $filter_payfull_order_id;
+		$data['filter_order_id']            = $filter_order_id;
+		$data['filter_transaction_id']      = $filter_transaction_id;
+		$data['filter_bank_id']             = $filter_bank_id;
+		$data['filter_status']              = $filter_status;
+		$data['filter_use3d']               = $filter_use3d;
+		$data['filter_client_ip']           = $filter_client_ip;
+		$data['filter_installments']        = $filter_installments;
+		$data['filter_date_added']          = $filter_date_added;
 
 		$data['sort'] = $sort;
 		$data['order'] = $order;

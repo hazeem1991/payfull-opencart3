@@ -2,6 +2,7 @@
 class ControllerExtensionPaymentPayfull extends Controller {
 
 	public function index() {
+
 		$this->language->load('extension/payment/payfull');
 
 		$data['entry_payfull_installmet'] 	= $this->language->get('entry_payfull_installmet');
@@ -60,9 +61,7 @@ class ControllerExtensionPaymentPayfull extends Controller {
             $base_url = $this->config->get('config_url');
         }
 
-        //todo: payfull - get bkm status
-		$data['payfull_bkm_status']      = 0;
-
+        $data['payfull_bkm_status']      = $this->config->get('payfull_bkm_status');
         $data['visa_img_path']                  = $base_url.'image/payfull/payfull_creditcard_visa.png';
         $data['master_img_path']                = $base_url.'image/payfull/payfull_creditcard_master.png';
         $data['maestro_img_path']               = $base_url.'image/payfull/payfull_creditcard_maestro.png';
@@ -70,7 +69,6 @@ class ControllerExtensionPaymentPayfull extends Controller {
         $data['not_supported_img_path']         = $base_url.'image/payfull/payfull_creditcard_not_supported.png';
         $data['payfull_3dsecure_status']       = $this->config->get('payfull_3dsecure_status');
         $data['payfull_force_3dsecure_status'] = $this->config->get('payfull_force_3dsecure_status');
-        $data['payfull_force_3dsecure_debit']  = 1;
         $data['payfull_banks_images']          = $base_url.'image/payfull/';
         $data['payfull_logo']                  = $base_url.'image/payfull/payfull-logo.png';
 
@@ -90,7 +88,7 @@ class ControllerExtensionPaymentPayfull extends Controller {
         $payfull_installment_status = $this->config->get('payfull_installment_status');
 
 		//default data
-		$defaultTotal 				=	$this->currency->format($order_info['total'], $order_info['currency_code'], false, true);
+		$defaultTotal 				= $this->currency->format($order_info['total'], $order_info['currency_code'], false, true);
 		$json 						= array();
 		$json['has3d'] 				= $payfull_3dsecure_status;
 		$json['installments'] 		= [['count' => 1, 'installment_total'=>$defaultTotal, 'total'=>$defaultTotal]];
@@ -107,7 +105,6 @@ class ControllerExtensionPaymentPayfull extends Controller {
 		//get info from API about bank + card + instalments
 		$card_info  		 = json_decode($this->model_extension_payment_payfull->get_card_info(), true);
 		$installments_info 	 = json_decode($this->model_extension_payment_payfull->getInstallments(), true);
-		$bank_info 			 = array();
 
 		//no bank is detected
 		if(!isset($card_info['data']['bank_id']) Or $card_info['data']['bank_id'] == '') {
@@ -119,13 +116,27 @@ class ControllerExtensionPaymentPayfull extends Controller {
 			$json['card_type'] = $card_info['data']['type'];
 		}
 
-        $bank_info = [];
-        if(isset($installments_info['data'])){
-            foreach($installments_info['data'] as $temp) {
-                if($temp['bank'] == $card_info['data']['bank_id']) {
-                    $bank_info = $temp;
-                }
+        // we check if the origin of the network exist use it or use card issuer or anybank related with the network
+        $originFoundArr      = FALSE;
+        $cardIssuerArr       = FALSE;
+        $networkBankFoundArr = FALSE;
+        foreach($installments_info['data'] as $temp) {
+            if($temp['bank'] == $card_info['data']['bankAcceptInstallments']['origin']) {
+                $originFoundArr = $temp;
+                break;
+            } elseif ($temp['bank'] == $card_info['data']['bank_id']){
+                $cardIssuerArr = $temp;
+            } elseif (array_search($temp['bank'], $card_info['data']['bankAcceptInstallments']['network'])) {
+                $networkBankFoundArr = $temp;
             }
+        }
+
+        if($originFoundArr){
+            $bank_info = $originFoundArr;
+        }elseif($cardIssuerArr){
+            $bank_info = $cardIssuerArr;
+        }elseif($networkBankFoundArr){
+            $bank_info = $networkBankFoundArr;
         }
 
         //still there is no one shot commission
@@ -151,9 +162,21 @@ class ControllerExtensionPaymentPayfull extends Controller {
 		$this->session->data['gateway'] = $bank_info['gateway'];
 		$json['bank_id'] 				= $bank_info['bank'];
 
-		//get info from API about extra instalments
-        //todo: payfull - extra installments
-		$extraInstallmentsAndInstallmentsArr = [];
+        //get info from API about extra instalments
+        $extraInstallmentsAndInstallmentsArr = [];
+        $extra_installments_info 	         = json_decode($this->model_payment_payfull->getExtraInstallments(), true);
+        if(isset($extra_installments_info['data']['campaigns'])) {
+            foreach($extra_installments_info['data']['campaigns'] as $extra_installments_row){
+                if(
+                    $extra_installments_row['bank_id']           == $bank_info['bank'] AND
+                    $extra_installments_row['min_amount']        < ($order_info['total']*$extra_installments_info['data']['exchange_rate']) AND
+                    $extra_installments_row['status']            == 1 AND
+                    $extra_installments_row['gateway']           == $bank_info['gateway']
+                ){
+                    $extraInstallmentsAndInstallmentsArr[$extra_installments_row['base_installments']] = true;
+                }
+            }
+        }
 
 		foreach($bank_info['installments'] as $justNormalKey=>$installment){
             if($this->config->get('payfull_installment_commission')){
@@ -172,8 +195,10 @@ class ControllerExtensionPaymentPayfull extends Controller {
 			$installment_total = $this->currency->format($installment_total, $order_info['currency_code'], false, true);
 			$bank_info['installments'][$justNormalKey]['installment_total'] = $installment_total;
 
-            //todo: payfull - extra inst
-			if(false){}
+            if($this->config->get('payfull_extra_installment_status')){
+                if(isset($extraInstallmentsAndInstallmentsArr[$installment['count']])) $bank_info['installments'][$justNormalKey]['hasExtra'] = '1';
+                else																   $bank_info['installments'][$justNormalKey]['hasExtra'] = '0';
+            }
 
 		}
 
@@ -192,9 +217,57 @@ class ControllerExtensionPaymentPayfull extends Controller {
 	}
 
 	public function get_extra_installments(){
-        //todo: payfull - get extra installments
+
+        $this->load->model('checkout/order');
+        $this->load->model('payment/payfull');
+        $order_info 		= $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $installments_info  = json_decode($this->model_payment_payfull->getInstallments(), true);
+
+        //default data
+        $total              = $this->currency->format($order_info['total'], $order_info['currency_code'], false, false);
+        $installments 	    = $this->request->get['inst'];
+        $bank_id 	        = $this->request->get['bank'];
         $json 		        = array();
         $json['extra_inst'] = [];
+
+        //no cc number
+        if(empty($this->request->get['inst']) OR empty($this->request->get['bank'])){
+            header('Content-type: text/json');
+            echo json_encode($json);
+            exit;
+        }
+
+        //get gateway
+        $gateway = '';
+        foreach($installments_info['data'] as $temp) {
+            if($temp['bank'] == $bank_id) {
+                $gateway = $temp['gateway'];
+                break;
+            }
+        }
+
+        //get info from API about extra instalments
+        $extra_installments_info 	= json_decode($this->model_payment_payfull->getExtraInstallments(), true);
+
+        //no correct response
+        if(!isset($extra_installments_info['data']['campaigns'])) {
+            header('Content-type: text/json');
+            echo json_encode($json);
+            exit;
+        }
+
+        foreach($extra_installments_info['data']['campaigns'] as $extra_installments_row){
+            if(
+                $extra_installments_row['bank_id']           == $bank_id AND
+                $extra_installments_row['min_amount']        < ($total*$extra_installments_info['data']['exchange_rate']) AND
+                $extra_installments_row['base_installments'] == $installments AND
+                $extra_installments_row['status']            == 1 AND
+                $extra_installments_row['gateway']           == $gateway
+            ){
+                $json['extra_inst'][$extra_installments_row['extra_installments']] = $extra_installments_row['campaign_id'];
+            }
+        }
+
         header('Content-type: text/json');
         echo json_encode($json);
         exit;

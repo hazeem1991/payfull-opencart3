@@ -32,7 +32,7 @@ $_['entry_extra_installment_status']= 'Extra Installments (Vadaa)';
 $_['entry_bkm_status']              = 'BKM Express';
 $_['entry_check_merchant']          = 'Validate Merchant Credentials';
 
-$_['help_total']          = 'Total';
+$_['help_total']                    = 'Total';
 
 // Error
 $_['error_permission']				= 'Warning: You do not have permission to modify Payfull module!';

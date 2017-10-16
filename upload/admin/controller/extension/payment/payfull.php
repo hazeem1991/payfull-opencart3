@@ -3,31 +3,19 @@ class ControllerExtensionPaymentPayfull extends Controller {
 	private $error = array();
 
 	public function index() {
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
-
 
         $this->load->language('extension/payment/payfull');
-
 		$this->document->setTitle($this->language->get('heading_title'));
-
 		$this->load->model('setting/setting');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-
 			$this->model_setting_setting->editSetting('payfull', $this->request->post);
 			//for opencart 3
 			$this->model_setting_setting->editSetting('payment_payfull', $this->request->post);
-
 			$this->session->data['success'] = $this->language->get('text_success');
-
             $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));
 		}
-
-
-		$data['heading_title'] = $this->language->get('heading_title');
-
+        $data['heading_title'] = $this->language->get('heading_title');
 		$data['text_edit'] = $this->language->get('text_edit');
 		$data['text_enabled'] = $this->language->get('text_enabled');
 		$data['text_disabled'] = $this->language->get('text_disabled');
@@ -35,7 +23,6 @@ class ControllerExtensionPaymentPayfull extends Controller {
 
 		$data['entry_yes'] = $this->language->get('entry_yes');
 		$data['entry_no'] = $this->language->get('entry_no');
-
 		$data['entry_endpoint'] = $this->language->get('entry_endpoint');
 		$data['entry_username'] = $this->language->get('entry_username');
 		$data['entry_password'] = $this->language->get('entry_password');
@@ -51,8 +38,7 @@ class ControllerExtensionPaymentPayfull extends Controller {
         $data['entry_force_3dsecure_hint'] = $this->language->get('entry_force_3dsecure_hint');
         $data['entry_installment_status'] = $this->language->get('entry_installment_status');
         $data['entry_installment_commission'] = $this->language->get('entry_installment_commission');
-        //todo: payfull - extra inst
-		$data['entry_extra_installment_status'] = 0;
+		$data['entry_extra_installment_status'] = $this->language->get('entry_extra_installment_status');;
 		$data['entry_bkm_status'] = $this->language->get('entry_bkm_status');
 		$data['entry_check_merchant'] = $this->language->get('entry_check_merchant');
 
@@ -86,7 +72,6 @@ class ControllerExtensionPaymentPayfull extends Controller {
 		);
 
 		$data['action'] = $this->url->link('extension/payment/payfull', 'user_token=' . $this->session->data['user_token'], true);
-
         $data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true);
 
 		if (isset($this->request->post['payfull_endpoint'])) {
@@ -107,11 +92,6 @@ class ControllerExtensionPaymentPayfull extends Controller {
             $data['payfull_force_3dsecure_status'] = $this->config->get('payfull_force_3dsecure_status');
         }
 
-        if (isset($this->request->post['payfull_force_3dsecure_debit'])) {
-            $data['payfull_force_3dsecure_debit'] = $this->request->post['payfull_force_3dsecure_debit'];
-        } else {
-            $data['payfull_force_3dsecure_debit'] = $this->config->get('payfull_force_3dsecure_debit');
-        }
         $data['payfull_force_3dsecure_debit'] = true;
 
 		if (isset($this->request->post['payfull_installment_status'])) {
@@ -126,11 +106,13 @@ class ControllerExtensionPaymentPayfull extends Controller {
             $data['payfull_installment_commission'] = $this->config->get('payfull_installment_commission');
         }
 
-        //todo: payfull - extra inst
-        $data['payfull_extra_installment_status'] = 0;
+        if (isset($this->request->post['payfull_extra_installment_status'])) {
+            $data['payfull_extra_installment_status'] = $this->request->post['payfull_extra_installment_status'];
+        } else {
+            $data['payfull_extra_installment_status'] = $this->config->get('payfull_extra_installment_status');
+        }
 
-
-		if (isset($this->request->post['payfull_bkm_status'])) {
+        if (isset($this->request->post['payfull_bkm_status'])) {
 			$data['payfull_bkm_status'] = $this->request->post['payfull_bkm_status'];
 		} else {
 			$data['payfull_bkm_status'] = $this->config->get('payfull_bkm_status');
@@ -202,7 +184,6 @@ class ControllerExtensionPaymentPayfull extends Controller {
 		if (!$this->user->hasPermission('modify', 'extension/payment/payfull')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
-
         return !$this->error;
 	}
 }

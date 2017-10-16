@@ -1,8 +1,19 @@
 <form class="form-horizontal">
     <fieldset id="payment">
 
-        <!-- todo: payfull - bkm tab -->
-        <legend> {{ text_credit_card }} <img src=" {{ payfull_logo }}"></legend>
+
+        {%  if payfull_bkm_status %}
+        <ul class="tab">
+            <li><a href="javascript:void(0)" class="tablinks active" onclick="openPaymentMethod(event, 'cardPaymentMethod')"><?php echo $text_credit_card; ?><img class="payfullImage" src="{{ payfull_banks_images }} payfull-logo.png"></a></li>
+            <li><a href="javascript:void(0)" class="tablinks bkmTab" onclick="openPaymentMethod(event, 'bkmPaymentMethod')"><img class="bkmImage" src="{{ payfull_banks_images }}BKM.png"></a></li>
+        </ul>
+        {% else %}
+            <legend> {{ text_credit_card }} <img src=" {{ payfull_logo }}"></legend>
+        {% endif %}
+
+        {% if payfull_bkm_status %}
+        <div class="tabcontent" id="cardPaymentMethod" style="display: block;">
+        {% endif %}
 
         <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-cc-type"> {{ entry_cc_name }}</label>
@@ -102,24 +113,27 @@
             </div>
         {% endif %}
 
-
-        <!-- todo: payfull - bkm -->
-
+        {%  if payfull_bkm_status %}
+        </div>
+        <div class="tabcontent" id="bkmPaymentMethod">
+            <p> {{ text_bkm_explanation }}</p>
+            <input id="useBKM" name="useBKM" type="hidden" value="0" />
+        </div>
+        {% endif %}
     </fieldset>
 </form>
 <div class="buttons">
     <div class="pull-right">
-        <input type="button" value=" {{ button_confirm }}" id="button-confirm" data-loading-text=" {{ text_loading }}"
-               class="btn btn-primary"/>
+        <input type="button" value=" {{ button_confirm }}" id="button-confirm" data-loading-text=" {{ text_loading }}" class="btn btn-primary"/>
     </div>
 </div>
 
 <script type="text/javascript"><!--
     BIN_GLOBAL_FOR_CARD = '00000';
-    INSTALMENTS_RESET = true;
+    INSTALMENTS_RESET   = true;
 
     var cardNumberFiledSelector = $('#input-cc-number');
-    var confirmButton = $('#button-confirm');
+    var confirmButton           = $('#button-confirm');
 
     cardNumberFiledSelector.keyup(function () {
         var BIN = $(this).val();
@@ -343,10 +357,46 @@
     });
 
     function getExtraInstallments(selectedInstallmentCount, selectedInstallmentBank) {
+
         var divSelectorExtraInst = $('.extra_installments_container');
         var containerSelectorInst = $('.extra_installments_select');
-        containerSelectorInst.html('');
-        divSelectorExtraInst.css('display', 'none');
+
+      $.ajax({
+        url: 'index.php?route=extension/payment/payfull/get_extra_installments&inst='+selectedInstallmentCount+'&bank='+selectedInstallmentBank,
+        type: 'post',
+        data: $('#payment :input'),
+        dataType: 'json',
+
+        beforeSend: function() {
+          $('.alert').remove();
+          $('#button-confirm').attr('disabled', true);
+          $('#payment').before('<div class="alert alert-info"><i class="fa fa-info-circle"></i> <?php echo $text_wait; ?></div>');
+        },
+
+        complete: function() {
+          $('#button-confirm').attr('disabled', false);
+          $('.attention').remove();
+        },
+
+        success: function(json) {
+          $('.alert').remove();
+          if(json['extra_inst'] != ''){
+            var selectExtraInstallments = "<select name='campaign_id' class='form-control'>";
+            selectExtraInstallments = selectExtraInstallments+'<option value=""><?php echo $text_select_extra_inst;?></option>';
+            var extra_inst = json['extra_inst'];
+            $.each(extra_inst, function( index, value ) {
+              var option = '<option value="'+value+'">+ '+index+'</option>';
+              selectExtraInstallments = selectExtraInstallments+option;
+            });
+            selectExtraInstallments = selectExtraInstallments+'</select>';
+            containerSelectorInst.html(selectExtraInstallments);
+            divSelectorExtraInst.css('display', 'block');
+          }else{
+            containerSelectorInst.html('');
+            divSelectorExtraInst.css('display', 'none');
+          }
+        }
+      });
     }
 
     function openPaymentMethod(evt, methodName) {
