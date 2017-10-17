@@ -16,6 +16,7 @@ class ControllerExtensionPaymentPayfull extends Controller {
             $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));
 		}
         $data['heading_title'] = $this->language->get('heading_title');
+
 		$data['text_edit'] = $this->language->get('text_edit');
 		$data['text_enabled'] = $this->language->get('text_enabled');
 		$data['text_disabled'] = $this->language->get('text_disabled');
@@ -23,6 +24,7 @@ class ControllerExtensionPaymentPayfull extends Controller {
 
 		$data['entry_yes'] = $this->language->get('entry_yes');
 		$data['entry_no'] = $this->language->get('entry_no');
+
 		$data['entry_endpoint'] = $this->language->get('entry_endpoint');
 		$data['entry_username'] = $this->language->get('entry_username');
 		$data['entry_password'] = $this->language->get('entry_password');
