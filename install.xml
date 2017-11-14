@@ -9,7 +9,7 @@
         <operation>
             <search><![CDATA[$_['text_order']]]></search>
             <add position="before"><![CDATA[
-                $_['text_payfull_history'] =    'Payfull History';
+                $_['text_payfull_history'] =    'Payfull history';
             ]]></add>
         </operation>
     </file>
@@ -17,7 +17,7 @@
         <operation>
             <search><![CDATA[$_['text_order']]]></search>
             <add position="before"><![CDATA[
-                $_['text_payfull_history'] =    'Payfull History';
+                $_['text_payfull_history'] =    'Payfull history';
             ]]></add>
         </operation>
     </file>

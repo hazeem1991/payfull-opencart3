@@ -1,18 +1,14 @@
 <form class="form-horizontal">
     <fieldset id="payment">
 
-
         {%  if payfull_bkm_status %}
         <ul class="tab">
-            <li><a href="javascript:void(0)" class="tablinks active" onclick="openPaymentMethod(event, 'cardPaymentMethod')"><?php echo $text_credit_card; ?><img class="payfullImage" src="{{ payfull_banks_images }} payfull-logo.png"></a></li>
+            <li><a href="javascript:void(0)" class="tablinks active" onclick="openPaymentMethod(event, 'cardPaymentMethod')"><?php echo $text_credit_card; ?><img class="payfullImage" src="{{ payfull_banks_images }}payfull-logo.png"></a></li>
             <li><a href="javascript:void(0)" class="tablinks bkmTab" onclick="openPaymentMethod(event, 'bkmPaymentMethod')"><img class="bkmImage" src="{{ payfull_banks_images }}BKM.png"></a></li>
         </ul>
+        <div class="tabcontent" id="cardPaymentMethod" style="display: block;">
         {% else %}
             <legend> {{ text_credit_card }} <img src=" {{ payfull_logo }}"></legend>
-        {% endif %}
-
-        {% if payfull_bkm_status %}
-        <div class="tabcontent" id="cardPaymentMethod" style="display: block;">
         {% endif %}
 
         <div class="form-group required">
@@ -61,8 +57,8 @@
             <div class="col-sm-6">
                 <div id="installment_table_id">
                     <div class="installmet_head">
-                        <div class="install_head_label add_space"><img style="display: none" class="bank_photo"
-                                                                       data-src=" {{ payfull_banks_images }}" src="">
+                        <div class="install_head_label add_space">
+                            <img style="display: none" class="bank_photo" data-src=" {{ payfull_banks_images }}" src="">
                         </div>
                         <div class="install_head_label"> {{ entry_payfull_installmet }}</div>
                         <div class="install_head_label"> {{ entry_payfull_amount }}</div>
@@ -70,9 +66,9 @@
                     </div>
                     <div class="installment_body" id="installment_body">
                         <div class="installment_row">
-                            <div class="install_body_label installment_radio"><input rel="1" type="radio"
-                                                                                     class="installment_radio" checked
-                                                                                     name="installments" value="1"/>
+                            <div class="install_body_label installment_radio">
+                                <input rel="1" type="radio" class="installment_radio" checked
+                                       name="installments" value="1"/>
                             </div>
                             <div class="install_body_label installment_lable_code"> {{ text_one_shot }}</div>
                             <div class="install_body_label"> {{ total }}</div>
@@ -83,6 +79,7 @@
                 </div>
             </div>
         </div>
+
         <div class="form-group  extra_installments_container" style="display: none;">
             <div class="col-sm-3 col-sm-offset-2">
                 <label> {{ text_extra_installments }}</label>
@@ -92,29 +89,28 @@
             </div>
         </div>
 
-
         {% if payfull_force_3dsecure_status %}
-            <div class="form-group use-3d-wrapper">
-                <div class="col-sm-10 col-sm-offset-2">
-                    <div class="checkbox">
-                        <label><input data-forced="true" disabled="disabled" checked="checked" name="use3d" id="use3d"
-                                      type="checkbox" value="1"> {{ text_3d }}</label>
-                    </div>
+        <div class="form-group use-3d-wrapper">
+            <div class="col-sm-10 col-sm-offset-2">
+                <div class="checkbox">
+                    <label>
+                        <input data-forced="true" disabled="disabled" checked="checked" name="use3d" id="use3d"
+                               type="checkbox" value="1"> {{ text_3d }}</label>
                 </div>
             </div>
+        </div>
         {% elseif payfull_3dsecure_status %}
-            <div class="form-group use-3d-wrapper">
-                <div class="col-sm-10 col-sm-offset-2">
-                    <div class="checkbox">
-                        <label><input data-forced="false" name="use3d" id="use3d" type="checkbox"
-                                      value="1"> {{ text_3d }}</label>
-                    </div>
+        <div class="form-group use-3d-wrapper">
+            <div class="col-sm-10 col-sm-offset-2">
+                <div class="checkbox">
+                    <label><input data-forced="false" name="use3d" id="use3d" type="checkbox"
+                                  value="1"> {{ text_3d }}</label>
                 </div>
             </div>
+        </div>
         {% endif %}
 
         {%  if payfull_bkm_status %}
-        </div>
         <div class="tabcontent" id="bkmPaymentMethod">
             <p> {{ text_bkm_explanation }}</p>
             <input id="useBKM" name="useBKM" type="hidden" value="0" />
@@ -122,13 +118,15 @@
         {% endif %}
     </fieldset>
 </form>
+
 <div class="buttons">
     <div class="pull-right">
-        <input type="button" value=" {{ button_confirm }}" id="button-confirm" data-loading-text=" {{ text_loading }}" class="btn btn-primary"/>
+        <input type="button" value=" {{ button_confirm }}" id="button-confirm" data-loading-text=" {{ text_loading }}"
+               class="btn btn-primary"/>
     </div>
 </div>
 
-<script type="text/javascript"><!--
+<script type="text/javascript">
     BIN_GLOBAL_FOR_CARD = '00000';
     INSTALMENTS_RESET   = true;
 
@@ -187,27 +185,33 @@
                 $('.alert').remove();
 
                 if (json['error']['general_error']) {
-                    $('#payment').after('<div class="alert alert-warning"><i class="fa fa-info-circle"></i> ' + json['error']['general_error'] + '</div>');
+                    $('#payment').after('<div class="alert alert-warning"><i class="fa fa-info-circle"></i> '
+                        + json['error']['general_error'] + '</div>');
                 }
 
                 if (json['error']['cc_name']) {
-                    $('#input-cc-name').after('<div class="alert alert-warning"><i class="fa fa-info-circle"></i> ' + json['error']['cc_name'] + '</div>');
+                    $('#input-cc-name').after('<div class="alert alert-warning"><i class="fa fa-info-circle"></i> '
+                        + json['error']['cc_name'] + '</div>');
                 }
 
                 if (json['error']['cc_number']) {
-                    $('#input-cc-number').after('<div class="alert alert-warning"><i class="fa fa-info-circle"></i> ' + json['error']['cc_number'] + '</div>');
+                    $('#input-cc-number').after('<div class="alert alert-warning"><i class="fa fa-info-circle"></i> '
+                        + json['error']['cc_number'] + '</div>');
                 }
 
                 if (json['error']['cc_month']) {
-                    $("select[name='cc_month']").after('<div class="alert alert-warning"><i class="fa fa-info-circle"></i> ' + json['error']['cc_month'] + '</div>');
+                    $("select[name='cc_month']").after('<div class="alert alert-warning"><i class="fa fa-info-circle"></i> '
+                        + json['error']['cc_month'] + '</div>');
                 }
 
                 if (json['error']['cc_year']) {
-                    $("select[name='cc_year']").after('<div class="alert alert-warning"><i class="fa fa-info-circle"></i> ' + json['error']['cc_year'] + '</div>');
+                    $("select[name='cc_year']").after('<div class="alert alert-warning"><i class="fa fa-info-circle"></i> '
+                        + json['error']['cc_year'] + '</div>');
                 }
 
                 if (json['error']['cc_cvc']) {
-                    $('#input-cc-cvc').after('<div class="alert alert-warning"><i class="fa fa-info-circle"></i> ' + json['error']['cc_cvc'] + '</div>');
+                    $('#input-cc-cvc').after('<div class="alert alert-warning"><i class="fa fa-info-circle"></i> '
+                        + json['error']['cc_cvc'] + '</div>');
                 }
             }
         });
@@ -268,6 +272,7 @@
 
             success: function (json) {
                 $('.alert').remove();
+
                 if (json['has3d'] == 1) {
                     $('.use-3d-wrapper').css('display', 'block');
                 } else {
@@ -294,7 +299,6 @@
                 var oneShotInsTotal = json['installments']['0']['installment_total'];
                 var oneShotTotal = json['installments']['0']['total'];
                 var oneShotSelected = 1;
-                var usedIntCount = [];
                 $options.append(getInstallementOption(oneShotCount, oneShotInsTotal, oneShotTotal, oneShotSelected, ''));
                 if (json['installments'].length > 0 && json['card_type'] == 'CREDIT') {
                     for ($i = 2; $i < json['installments'].length; $i++) {
@@ -302,12 +306,16 @@
                         var count = json['installments'][$i]['count'];
                         var total = json['installments'][$i]['total'];
                         var hasExtra = json['installments'][$i]['hasExtra'];
-                        if (count == 1) continue;
-                        if (usedIntCount[count] != undefined) continue;
-
-                        usedIntCount[count] = count;
                         $options.append(getInstallementOption(count, installment_total, total, 0, json['bank_id'], hasExtra));
                     }
+                }
+
+                if(json['bank_id'] == ''){
+                  var divSelectorExtraInst  = $('.extra_installments_container');
+                  var containerSelectorInst = $('.extra_installments_select');
+
+                  containerSelectorInst.html('');
+                  divSelectorExtraInst.css('display', 'none');
                 }
 
 
@@ -340,7 +348,8 @@
         return ''
             + '<div class="installment_row">'
             + '<div class="install_body_label installment_radio">'
-            + '<input data-bank-id="' + bank_id + '" rel="' + count + '" class="custom_field_installment_radio" type="radio" ' + checked + ' name="installments" value="' + count + '" />'
+            + '<input data-bank-id="' + bank_id + '" rel="' + count + '" class="custom_field_installment_radio"'
+            + ' type="radio" ' + checked + ' name="installments" value="' + count + '" />'
             + '</div>'
             + '<div class="install_body_label installment_lable_code">' + textOfCount + '</div>'
             + '<div class="install_body_label">' + instalment_total + '</div>'
@@ -356,50 +365,50 @@
 
     });
 
-    function getExtraInstallments(selectedInstallmentCount, selectedInstallmentBank) {
+  function getExtraInstallments(selectedInstallmentCount, selectedInstallmentBank) {
 
-        var divSelectorExtraInst = $('.extra_installments_container');
-        var containerSelectorInst = $('.extra_installments_select');
+    var divSelectorExtraInst  = $('.extra_installments_container');
+    var containerSelectorInst = $('.extra_installments_select');
 
-      $.ajax({
-        url: 'index.php?route=extension/payment/payfull/get_extra_installments&inst='+selectedInstallmentCount+'&bank='+selectedInstallmentBank,
-        type: 'post',
-        data: $('#payment :input'),
-        dataType: 'json',
+    $.ajax({
+      url: 'index.php?route=extension/payment/payfull/get_extra_installments&inst='+selectedInstallmentCount+'&bank='+selectedInstallmentBank,
+      type: 'post',
+      data: $('#payment :input'),
+      dataType: 'json',
 
-        beforeSend: function() {
-          $('.alert').remove();
-          $('#button-confirm').attr('disabled', true);
-          $('#payment').before('<div class="alert alert-info"><i class="fa fa-info-circle"></i> <?php echo $text_wait; ?></div>');
-        },
+      beforeSend: function() {
+        $('.alert').remove();
+        $('#button-confirm').attr('disabled', true);
+        $('#payment').before('<div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_wait }} </div>');
+      },
 
-        complete: function() {
-          $('#button-confirm').attr('disabled', false);
-          $('.attention').remove();
-        },
+      complete: function() {
+        $('#button-confirm').attr('disabled', false);
+        $('.attention').remove();
+      },
 
-        success: function(json) {
-          $('.alert').remove();
-          if(json['extra_inst'] != ''){
-            var selectExtraInstallments = "<select name='campaign_id' class='form-control'>";
-            selectExtraInstallments = selectExtraInstallments+'<option value=""><?php echo $text_select_extra_inst;?></option>';
-            var extra_inst = json['extra_inst'];
-            $.each(extra_inst, function( index, value ) {
-              var option = '<option value="'+value+'">+ '+index+'</option>';
-              selectExtraInstallments = selectExtraInstallments+option;
-            });
-            selectExtraInstallments = selectExtraInstallments+'</select>';
-            containerSelectorInst.html(selectExtraInstallments);
-            divSelectorExtraInst.css('display', 'block');
-          }else{
-            containerSelectorInst.html('');
-            divSelectorExtraInst.css('display', 'none');
-          }
+      success: function(json) {
+        $('.alert').remove();
+        if(json['extra_inst'] != ''){
+          var selectExtraInstallments = "<select name='campaign_id' class='form-control'>";
+          selectExtraInstallments = selectExtraInstallments+'<option value="">{{ text_select_extra_inst }}</option>';
+          var extra_inst = json['extra_inst'];
+          $.each(extra_inst, function( index, value ) {
+            var option = '<option value="'+value+'">+ '+index+'</option>';
+            selectExtraInstallments = selectExtraInstallments+option;
+          });
+          selectExtraInstallments = selectExtraInstallments+'</select>';
+          containerSelectorInst.html(selectExtraInstallments);
+          divSelectorExtraInst.css('display', 'block');
+        }else{
+          containerSelectorInst.html('');
+          divSelectorExtraInst.css('display', 'none');
         }
-      });
-    }
+      }
+    });
+  }
 
-    function openPaymentMethod(evt, methodName) {
+  function openPaymentMethod(evt, methodName) {
         // Declare all variables
         var i, tabcontent, tablinks;
 
@@ -425,7 +434,7 @@
         }
     }
 
-    //--></script>
+    </script>
 <style>
     .input-cc-number-visa {
         background: rgba(0, 0, 0, 0) url(" {{ visa_img_path }}") no-repeat scroll right center / 12% auto;
@@ -553,7 +562,7 @@
         display: inline-block;
         color: black;
         text-align: center;
-        padding: 14px 16px;
+        padding: 6px 12px;
         text-decoration: none;
         transition: 0.3s;
         font-size: 17px;
@@ -568,6 +577,11 @@
     ul.tab li a:focus, .active {
         background-color: #ccc;
     }
+    ul.tab li a img{
+        height: 43px;
+        width: 125px;
+    }
+
 
     /* Style the tab content */
     .tabcontent {
@@ -579,10 +593,6 @@
 
     .bkmImage {
         max-width: 125px;
-    }
-
-    .bkmTab {
-        padding: 2px !important;
     }
 
     fieldset#payment {

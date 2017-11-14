@@ -39,6 +39,7 @@ class ModelExtensionPaymentPayfull extends Model {
 	}
 
 	public function getExtraInstallments(){
+
         $extraInstallmentsStatus = $this->config->get('payfull_extra_installment_status');
         if(!$extraInstallmentsStatus){
             return json_encode([]);
@@ -65,10 +66,11 @@ class ModelExtensionPaymentPayfull extends Model {
 		$params = array(
 		    "type"            => 'Get',
 		    "get_param"       => 'Issuer',
-		    "bin"             =>  substr($this->request->post['cc_number'], 0, 6),//'435508',
+		    "bin"             =>  substr($this->request->post['cc_number'], 0, 6),
 		    "language"        => 'tr',
 		    "client_ip"       => $_SERVER['REMOTE_ADDR'],
 		);
+
 
 		return $this->call($params);
 	}
@@ -103,7 +105,6 @@ class ModelExtensionPaymentPayfull extends Model {
 		$this->load->model('checkout/order');
 
 		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-
 		$total = $this->currency->format($order_info['total'], $order_info['currency_code'], false, false);
 
 		if(isset($this->request->post['use3d'])){
@@ -123,10 +124,10 @@ class ModelExtensionPaymentPayfull extends Model {
             if($cardInfo['status']){
                 if($cardInfo['data']['type'] != 'CREDIT') $use3d = true;
             }
-
         }
 
 		$bkmExist = (isset($this->request->post['useBKM']) AND $this->request->post['useBKM']);
+
 		if($bkmExist){
 			$params = array(
 				"type"            => 'Sale',
@@ -143,10 +144,8 @@ class ModelExtensionPaymentPayfull extends Model {
 				"customer_email"     => $order_info['email'],
 				"customer_phone"     => $order_info['telephone'],
 
-
 				"passive_data"  => $order_info['order_id'],
 			);
-
 		}else{
 			$params = array(
 				"type"            => 'Sale',
@@ -168,7 +167,6 @@ class ModelExtensionPaymentPayfull extends Model {
 				"customer_lastname"  => $order_info['lastname'],
 				"customer_email"     => $order_info['email'],
 				"customer_phone"     => $order_info['telephone'],
-
 
 				"passive_data"  => $order_info['order_id'],
 			);
