@@ -290,7 +290,14 @@ class ControllerExtensionPaymentPayfull extends Controller {
 		}
 
 		$response                           = $this->model_extension_payment_payfull->send();
-		$responseData                       = json_decode($response, true);
+
+		//html response
+		if(strpos($response, '<form') !== False OR strpos($response, '<html')){
+		    $responseData = ['html'=>$response, 'status'=>True];
+		}else{
+		    $responseData = json_decode($response, true);
+		}
+		
         $responseData['extra_installments'] = isset($responseData['extra_installments'])?$responseData['extra_installments']:0;
         $responseData['campaign_id']        = isset($responseData['campaign_id'])?$responseData['campaign_id']:0;
 
