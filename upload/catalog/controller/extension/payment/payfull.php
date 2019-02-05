@@ -570,8 +570,8 @@ class ControllerExtensionPaymentPayfull extends Controller {
         ksort($arr);
         $hashString_char_count = "";
 		foreach ($arr as $key=>$val) {
-		    $l =  mb_strlen($val);
-		    if($l) $hashString_char_count .= $l . $val;
+		    $val = (string)$val;
+		    $hashString_char_count .= mb_strlen($val) . $val;
 		}
 		$hashString_char_count      = strtolower(hash_hmac("sha1", $hashString_char_count, $password));
 		return $hashString_char_count;
